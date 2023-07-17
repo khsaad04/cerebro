@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 import random
-from typing import Union
 
-from discord import Interaction, app_commands
+from discord import app_commands
 from discord.ext import commands
 
 from cogs import Plugin
 from core import Bot
-from utils import Embed
+from utils import Context
 
 
 class Fun(Plugin):
@@ -21,9 +20,7 @@ class Fun(Plugin):
         description="Ask any question for a random answer.",
     )
     @app_commands.describe(question="The question you want to ask")
-    async def _8ball_command(
-        self, ctx: Union[commands.Context, Interaction], *, question: str
-    ):
+    async def _8ball_command(self, ctx: Context, *, question: str):
         replies = [
             "It is certain.",
             "It is decidedly so.",
@@ -49,7 +46,7 @@ class Fun(Plugin):
 
         ans = f"{ctx.author.mention} asked: {question} \nAns: {random.choice(replies)}"
 
-        await self.bot.success(ans, ctx)
+        await ctx.success(ans)
 
 
 async def setup(bot: Bot):

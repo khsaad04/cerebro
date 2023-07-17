@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import os
 from logging import getLogger
-from typing import Any, Optional, Union
+from typing import Any, Union
 
-from discord import Intents, Interaction
+from discord import Intents, Interaction, Message
 from discord.ext import commands
 
-from utils import Embed
+from utils import Context
 
 __all__ = ("Bot",)
 
@@ -43,54 +43,5 @@ class Bot(commands.Bot):
         log.info(f"Synced {len(synced_commands)} commands")
         log.info("Setup complete.")
 
-    async def success(
-        self,
-        msg: str,
-        ctx: Union[commands.Context, Interaction],
-        *,
-        ephemeral: Optional[bool] = False,
-        embed: Optional[bool] = True,
-        embed_title: Optional[str] = None,
-    ):
-        if embed_title is None:
-            embed_title = ctx.command.qualified_name
-        em = Embed(title=embed_title, description=msg)
-        if isinstance(ctx, Interaction):
-            if embed:
-                if ctx.response.is_done():
-                    return await ctx.followup.send(embed=em, ephemeral=ephemeral)
-                return await ctx.response.send_message(embed=em, ephemeral=ephemeral)
-            if ctx.response.is_done():
-                return await ctx.followup.send(content=msg, ephemeral=ephemeral)
-            return await ctx.response.send_message(msg, ephemeral=ephemeral)
-
-        else:
-            if embed:
-                return await ctx.send(embed=em)
-            return await ctx.send(msg)
-
-    async def error(
-        self,
-        msg: str,
-        ctx: Union[commands.Context, Interaction],
-        *,
-        ephemeral: Optional[bool] = True,
-        embed: Optional[bool] = True,
-        embed_title: Optional[str] = None,
-    ):
-        if embed_title is None:
-            embed_title = ctx.command.qualified_name
-        em = Embed(title=embed_title, description=msg)
-        if isinstance(ctx, Interaction):
-            if embed:
-                if ctx.response.is_done():
-                    return await ctx.followup.send(embed=em, ephemeral=ephemeral)
-                return await ctx.response.send_message(embed=em, ephemeral=ephemeral)
-            if ctx.response.is_done():
-                return await ctx.followup.send(content=msg, ephemeral=ephemeral)
-            return await ctx.response.send_message(msg, ephemeral=ephemeral)
-
-        else:
-            if embed:
-                return await ctx.send(embed=em)
-            return await ctx.send(msg)
+    async def get_context(self, origin: Union[Message, Interaction], *, cls=Context):
+        return await super().get_context(origin, cls=cls)
