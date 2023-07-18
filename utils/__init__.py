@@ -1,2 +1,2 @@
 from .context import *
-from .embeds import *
+from .help import MyHelp

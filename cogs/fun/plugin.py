@@ -46,7 +46,7 @@ class Fun(Plugin):
 
         ans = f"{ctx.author.mention} asked: {question} \nAns: {random.choice(replies)}"
 
-        await ctx.success(ans)
+        await ctx.send(ans)
 
 
 async def setup(bot: Bot):
