@@ -3,7 +3,7 @@ from __future__ import annotations
 from discord.ext import commands
 
 from cogs import Plugin
-from cogs.utility.views import *
+from cogs.utility.views import EmbedBuilderSelect, Template
 from core import Bot
 from utils import Context
 

@@ -5,16 +5,10 @@ import traceback
 from typing import Any
 
 from discord import Embed
-from discord.ext.commands import (
-    BadArgument,
-    ChannelNotFound,
-    Cog,
-    CommandError,
-    CommandNotFound,
-    MemberNotFound,
-    MissingPermissions,
-    MissingRequiredArgument,
-)
+from discord.ext.commands import (BadArgument, ChannelNotFound, Cog,
+                                  CommandError, CommandNotFound,
+                                  MemberNotFound, MissingPermissions,
+                                  MissingRequiredArgument)
 
 from core import Bot
 from utils import Context
