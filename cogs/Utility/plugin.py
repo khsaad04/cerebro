@@ -7,7 +7,7 @@ from discord.ext import commands
 from discord.ui import Button
 
 from cogs import Plugin
-from cogs.utility.views import CalculatorView, EmbedBuilderSelect, Template
+from cogs.Utility.views import CalculatorView, EmbedBuilderSelect, Template
 from core import Bot
 from utils import Context
 
