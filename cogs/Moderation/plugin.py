@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from discord import Color, Embed, Member, app_commands
+from typing import Optional
+
+import discord
+from discord import Member, User, app_commands
 from discord.ext import commands
 
 from cogs import Plugin
@@ -11,6 +14,34 @@ from utils import Context
 class Moderation(Plugin):
     def __init__(self, bot: Bot):
         self.bot: Bot = bot
+
+    def can_moderate(
+        self,
+        ctx: Context,
+        member: Member,
+    ):
+        if isinstance(member, User):
+            return False
+
+        if member == ctx.author:
+            return f"You thought you could {ctx.command.qualified_name} yourself? Bruh"
+        elif member == ctx.guild.owner:
+            return f"You can't {ctx.command.qualified_name} the server owner."
+        elif (
+            ctx.author.top_role.position <= member.top_role.position
+            and ctx.author != ctx.guild.owner
+        ):
+            return (
+                f"You can't {ctx.command.qualified_name} this member. "
+                "They have a higher or equal role than you."
+            )
+        elif ctx.guild.me.top_role.position <= member.top_role.position:
+            return (
+                f"I can't {ctx.command.qualified_name} this member. "
+                "They have a higher or equal role than me."
+            )
+
+        return False
 
     # kick_command
     @commands.hybrid_command(name="kick", description="Kick a member from the server")
@@ -25,23 +56,10 @@ class Moderation(Plugin):
         ctx: Context,
         member: Member,
         *,
-        reason: str = "no reason whatsoever",
+        reason: Optional[str] = "no reason whatsoever",
     ):
-        if ctx.author == member:
-            return await ctx.error("Imagine trying to kick yourself, what a retard")
-
-        elif member == ctx.guild.owner:
-            return await ctx.error(f"{member.mention} is the owner")
-
-        elif ctx.me.top_role < member.top_role:
-            return await ctx.error("I'm not able to kick them")
-
-        elif (
-            ctx.author.top_role < member.top_role
-            and not ctx.author.guild_permissions.administrator
-            and not ctx.author.guild.owner == ctx.author
-        ):
-            return await ctx.error("You can't kick them")
+        if check_made := self.can_moderate(ctx, member):
+            return await ctx.error(check_made)
 
         description = f"{member} has been kicked for {reason}"
 
@@ -51,12 +69,14 @@ class Moderation(Plugin):
                 await member.send(
                     f"You have been kicked from {ctx.guild.name} for {reason}"
                 )
-            except Exception:
-                description = "".join([description, "\ncouldn't dm them"])
-        except Exception:
+            except discord.Forbidden:
+                pass
+
+        except discord.Forbidden:
             await ctx.error("Couldn't kick them")
-        else:
-            await ctx.send(description)
+            return
+
+        await ctx.send(description)
 
     # ban_command
     @commands.hybrid_command(name="ban", description="Ban a member from the server")
@@ -71,23 +91,10 @@ class Moderation(Plugin):
         ctx: Context,
         member: Member,
         *,
-        reason: str = "no reason whatsoever",
+        reason: Optional[str] = "no reason whatsoever",
     ):
-        if ctx.author == member:
-            return await ctx.error("Imagine trying to ban yourself, what a retard")
-
-        elif member == ctx.guild.owner:
-            return await ctx.error(f"{member.mention} is the owner")
-
-        elif ctx.me.top_role < member.top_role:
-            return await ctx.error("I'm not able to ban them")
-
-        elif (
-            ctx.author.top_role < member.top_role
-            and not ctx.author.guild_permissions.administrator
-            and not ctx.author.guild.owner == ctx.author
-        ):
-            return await ctx.error("You can't ban them")
+        if check_made := self.can_moderate(ctx, member):
+            return await ctx.error(check_made)
 
         description = f"{member} has been banned for {reason}"
 
@@ -97,12 +104,14 @@ class Moderation(Plugin):
                 await member.send(
                     f"You have been banned from {ctx.guild.name} for {reason}"
                 )
-            except Exception:
-                description = "".join([description, "\ncouldn't dm them"])
-        except Exception:
+            except discord.Forbidden:
+                pass
+
+        except discord.Forbidden:
             await ctx.error("Couldn't ban them")
-        else:
-            await ctx.send(description)
+            return
+
+        await ctx.send(description)
 
 
 async def setup(bot: Bot):
