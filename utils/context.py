@@ -21,3 +21,16 @@ class Context(DefaultContext):
                 title=self.command.qualified_name, description=content, color=0xC246B3
             )
         return await super().send(embed=embed, **kwargs)
+
+    async def error(
+        self,
+        content: Optional[str] = None,
+        embed: Optional[Embed] = None,
+        *args: Any,
+        **kwargs: Any,
+    ):
+        if embed is None:
+            embed = Embed(
+                title=self.command.qualified_name, description=content, color=0xFF0000
+            )
+        return await super().send(embed=embed, **kwargs)

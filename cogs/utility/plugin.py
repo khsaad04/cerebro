@@ -28,7 +28,7 @@ class Utility(Plugin):
 
     @commands.hybrid_command(name="calc", description="Calculator made using buttons")
     async def calculator_command(self, ctx: Context):
-        view = CalculatorView("", "")
+        view = CalculatorView("", "", ctx)
 
         class CalculatorButton(Button):
             def __init__(self, **kwargs: Any):
