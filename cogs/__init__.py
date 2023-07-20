@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from logging import getLogger
 
-from discord.ext import commands
+from discord.ext.commands import Cog
 
 from core import Bot
 
@@ -11,7 +11,7 @@ __all__ = ("Plugin",)
 log = getLogger(__name__)
 
 
-class Plugin(commands.Cog):
+class Plugin(Cog):
     def __init__(self, bot: Bot) -> None:
         super().__init__()
 

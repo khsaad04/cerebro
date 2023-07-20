@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from discord import ButtonStyle, Embed
+from typing import Any
+
+from discord import ButtonStyle, Embed, Interaction
 from discord.ext import commands
 from discord.ui import Button
 
@@ -24,15 +26,15 @@ class Utility(Plugin):
         view = EmbedBuilderSelect(embed=embed, ctx=ctx)
         await ctx.send(embed=embed, view=view)
 
-    @commands.hybrid_command(name="calc")
+    @commands.hybrid_command(name="calc", description="Calculator made using buttons")
     async def calculator_command(self, ctx: Context):
         view = CalculatorView("", "")
 
         class CalculatorButton(Button):
-            def __init__(self, **kwargs):
+            def __init__(self, **kwargs: Any):
                 super().__init__(**kwargs)
 
-            async def callback(self, interaction):
+            async def callback(self, interaction: Interaction):
                 if self.label == "C":
                     view.display = view.display[:-1]
                     view.equation = view.display[:-1]

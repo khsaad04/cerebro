@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from typing import Any, Union
+from typing import Any
 
 import discord
 from discord import ButtonStyle, Embed, Interaction, SelectOption
-from discord.ext import commands
 from discord.ui import Button, Modal, Select, TextInput, View, button, select
+
+from utils import Context
 
 __all__ = (
     "Template",
@@ -14,10 +15,10 @@ __all__ = (
 
 
 class EmbedBuilderSelect(View):
-    def __init__(self, embed: Embed, ctx: Union[commands.Context, Interaction]):
+    def __init__(self, embed: Embed, ctx: Context):
         super().__init__()
         self.embed: Embed = embed
-        self.ctx: Union[commands.Context, Interaction] = ctx
+        self.ctx: Context = ctx
 
     @select(
         placeholder="Edit your embed",
@@ -32,7 +33,6 @@ class EmbedBuilderSelect(View):
             SelectOption(label="Add field", value="field"),
             SelectOption(label="Remove field", value="rfield"),
         ],
-        min_values=1,
         max_values=1,
         row=0,
     )
@@ -91,7 +91,6 @@ class ChannelSelect(discord.ui.ChannelSelect):
         super().__init__(
             channel_types=[discord.ChannelType.text],
             placeholder="Select channel...",
-            min_values=1,
             max_values=1,
             *args,
             **kwargs,

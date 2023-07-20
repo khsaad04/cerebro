@@ -9,14 +9,13 @@ __all__ = ("CalculatorView",)
 class CalculatorView(View):
     def __init__(self, equation: str, display: str):
         super().__init__()
-        self.equation = equation
-        self.display = display
+        self.equation: str = equation
+        self.display: str = display
 
-    async def interaction_check(self, interaction: Interaction):
+    async def interaction_check(self, interaction: Interaction) -> bool:
         if interaction.user != self.ctx.author:
             interaction.response.send_message(
                 "Let bro do his thing, you can use your own calculator", ephemeral=True
             )
             return False
-        else:
-            return True
+        return True
