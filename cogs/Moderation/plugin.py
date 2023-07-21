@@ -47,7 +47,6 @@ class Moderation(Plugin):
     @commands.hybrid_command(name="kick", description="Kick a member from the server")
     @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(kick_members=True)
-    @app_commands.default_permissions(kick_members=True)
     @app_commands.describe(
         member="The person you want to kick", reason="The reason you want to kick them"
     )
@@ -61,28 +60,25 @@ class Moderation(Plugin):
         if check_made := self.can_moderate(ctx, member):
             return await ctx.error(check_made)
 
-        description = f"{member} has been kicked for {reason}"
-
         try:
             await member.kick(reason=reason)
             try:
                 await member.send(
                     f"You have been kicked from {ctx.guild.name} for {reason}"
                 )
-            except discord.Forbidden:
+            except Exception:
                 pass
 
-        except discord.Forbidden:
+        except Exception:
             await ctx.error("Couldn't kick them")
             return
 
-        await ctx.send(description)
+        await ctx.send(f"{member} has been kicked for {reason}")
 
     # ban_command
     @commands.hybrid_command(name="ban", description="Ban a member from the server")
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    @app_commands.default_permissions(ban_members=True)
     @app_commands.describe(
         member="The person you want to ban", reason="The reason you want to ban them"
     )
@@ -96,22 +92,20 @@ class Moderation(Plugin):
         if check_made := self.can_moderate(ctx, member):
             return await ctx.error(check_made)
 
-        description = f"{member} has been banned for {reason}"
-
         try:
             await member.ban(reason=reason)
             try:
                 await member.send(
                     f"You have been banned from {ctx.guild.name} for {reason}"
                 )
-            except discord.Forbidden:
+            except Exception:
                 pass
 
-        except discord.Forbidden:
+        except Exception:
             await ctx.error("Couldn't ban them")
             return
 
-        await ctx.send(description)
+        await ctx.send(f"{member} has been banned for {reason}")
 
 
 async def setup(bot: Bot):
