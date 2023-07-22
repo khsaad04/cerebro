@@ -3,4 +3,3 @@ asyncio
 black
 isort
 chess
-requests
