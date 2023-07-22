@@ -2,3 +2,5 @@ discord.py
 asyncio
 black
 isort
+chess
+requests
