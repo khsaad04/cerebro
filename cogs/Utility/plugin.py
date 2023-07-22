@@ -1,13 +1,10 @@
 from __future__ import annotations
 
-from typing import Any
-
-from discord import ButtonStyle, Embed, Interaction
+from discord import Embed
 from discord.ext import commands
-from discord.ui import Button
 
 from cogs import Plugin
-from cogs.Utility.views import CalculatorView, EmbedBuilderSelect, Template
+from cogs.Utility.views import Calculator, EmbedBuilderSelect, Template
 from core import Bot
 from utils import Context
 
@@ -28,52 +25,8 @@ class Utility(Plugin):
 
     @commands.hybrid_command(name="calc", description="Calculator made using buttons")
     async def calculator_command(self, ctx: Context):
-        view = CalculatorView("", "", ctx)
-
-        class CalculatorButton(Button):
-            def __init__(self, **kwargs: Any):
-                super().__init__(**kwargs)
-
-            async def callback(self, interaction: Interaction):
-                if self.label == "C":
-                    view.display = view.display[:-1]
-                    view.equation = view.display[:-1]
-                elif self.label == "=":
-                    view.display = eval(view.equation)
-                    view.equation = ""
-                elif self.label == "÷":
-                    view.display += self.label
-                    view.equation += "/"
-                elif self.label == "×":
-                    view.display += self.label
-                    view.equation += "*"
-                elif self.label == "%":
-                    view.display += self.label
-                    view.equation += "*0.01"
-                else:
-                    view.display += self.label
-                    view.equation += self.label
-                embed = Embed(
-                    description=f"```                            \n{view.display}\n ```"
-                )
-                await interaction.response.edit_message(embed=embed)
-                if not isinstance(view.display, str):
-                    view.display = ""
-
-        button_row = float(0)
-        for buttons in "()%C789÷456×123-0.=+":
-            if buttons in "()%÷×-+":
-                style = ButtonStyle.green
-            elif buttons == "=":
-                style = ButtonStyle.primary
-            elif buttons == "C":
-                style = ButtonStyle.danger
-            else:
-                style = ButtonStyle.secondary
-            view.add_item(
-                CalculatorButton(label=buttons, row=int(button_row), style=style)
-            )
-            button_row += 0.25
+        calculator = Calculator(ctx)
+        view = calculator.get_view()
 
         embed = Embed(description="```                            \n \n ```")
         await ctx.send(embed=embed, view=view)
