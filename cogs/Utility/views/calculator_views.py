@@ -10,8 +10,8 @@ __all__ = ("CalculatorView",)
 
 class CalculatorView(View):
     def __init__(self, ctx: Context):
-        self.equation = ""
-        self.display = ""
+        self.equation: str = ""
+        self.display: str = ""
         self.ctx: Context = ctx
         super().__init__()
 
@@ -29,12 +29,11 @@ class CalculatorView(View):
 
     async def interaction_check(self, interaction: Interaction):
         if interaction.user != self.ctx.author:
-            interaction.response.send_message(
+            await interaction.response.send_message(
                 "Let bro do his thing, you can use your own calculator", ephemeral=True
             )
             return False
-        else:
-            return True
+        return True
 
 
 class CalculatorButton(Button):
@@ -42,34 +41,36 @@ class CalculatorButton(Button):
         super().__init__(*args, **kwargs)
 
     async def callback(self, interaction: Interaction):
-        match self.label:
+        view: CalculatorView = self.view
+        label: str = self.label
+        match label:
             case "C":
-                self.view.equation = self.view.equation[:-1]
-                self.view.display = self.view.display[:-1]
+                view.equation = view.equation[:-1]
+                view.display = view.display[:-1]
 
             case "=":
-                self.view.display = eval(self.view.equation)
-                self.view.equation = ""
+                view.display = eval(view.equation)
+                view.equation = ""
 
             case "÷":
-                self.view.equation = f"{self.view.equation}/"
-                self.view.display = f"{self.view.display}{self.label}"
+                view.equation = f"{view.equation}/"
+                view.display = f"{view.display}{label}"
 
             case "×":
-                self.view.equation = f"{self.view.equation}*"
-                self.view.display = f"{self.view.display}{self.label}"
+                view.equation = f"{view.equation}*"
+                view.display = f"{view.display}{label}"
 
             case "%":
-                self.view.equation = f"{self.view.equation}*0.01"
-                self.view.display = f"{self.view.display}{self.label}"
+                view.equation = f"{view.equation}*0.01"
+                view.display = f"{view.display}{label}"
 
             case _:
-                self.view.equation = f"{self.view.equation}{self.label}"
-                self.view.display = f"{self.view.display}{self.label}"
+                view.equation = f"{view.equation}{label}"
+                view.display = f"{view.display}{label}"
 
         embed = Embed(
-            description=f"```                            \n{self.view.display}\n ```"
+            description=f"```                            \n{view.display}\n ```"
         )
         await interaction.response.edit_message(embed=embed)
-        if not isinstance(self.view.display, str):
-            self.view.display = ""
+        if not isinstance(view.display, str):
+            view.display = ""

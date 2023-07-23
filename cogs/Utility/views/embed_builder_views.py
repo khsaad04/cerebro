@@ -76,7 +76,7 @@ class EmbedBuilderSelect(View):
 
     async def interaction_check(self, interaction: Interaction):
         if interaction.user != self.ctx.author:
-            interaction.response.send_message(
+            await interaction.response.send_message(
                 "Let bro do his thing, you can use your own builder", ephemeral=True
             )
             return False
