@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from chess import Board
 from discord.ui import View
 

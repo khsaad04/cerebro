@@ -1,10 +1,8 @@
-from __future__ import annotations
-
 from discord import Embed
 from discord.ext import commands
 
 from cogs import Plugin
-from cogs.Utility.views import Calculator, EmbedBuilderSelect, Template
+from cogs.Utility.views import CalculatorView, EmbedBuilderSelect, Template
 from core import Bot
 from utils import Context
 
@@ -25,10 +23,9 @@ class Utility(Plugin):
 
     @commands.hybrid_command(name="calc", description="Calculator made using buttons")
     async def calculator_command(self, ctx: Context):
-        calculator = Calculator(ctx)
-        view = calculator.get_view()
-
+        view = CalculatorView(ctx)
         embed = Embed(description="```                            \n \n ```")
+
         await ctx.send(embed=embed, view=view)
 
 
