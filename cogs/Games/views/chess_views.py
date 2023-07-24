@@ -21,7 +21,13 @@ class ChessView(View):
 
     @button(label="Move", style=ButtonStyle.green)
     async def move_button(self, interaction: Interaction, button: Button):
+        if interaction.user != self.player:
+            return await interaction.response.send_message(
+                "It's not your turn", ephemeral=True
+            )
+
         legal_moves = [str(move) for move in list(self.board.legal_moves)]
+
         modal = ChessModal(title="Make your move")
         modal.add_item(TextInput(label="Your move", placeholder="example: e2e4"))
         modal.add_item(
@@ -34,13 +40,14 @@ class ChessView(View):
         )
         await interaction.response.send_modal(modal)
         await modal.wait()
+
         move = str(modal.children[0])
         before = move[:-2]
         after = move[2:]
         try:
             self.board.push_uci(move)
+            fen = self.board.fen().split(" ")[0]
             if self.board.is_checkmate():
-                fen = self.board.fen().split(" ")[0]
                 embed = Embed(
                     title=f"{self.white} vs {self.black}",
                     description=f"{self.white if self.player is self.black else self.black} won by checkmate!",
@@ -50,11 +57,10 @@ class ChessView(View):
                 )
                 return await interaction.message.edit(embed=embed, view=None)
         except Exception:
-            await self.ctx.error("Invalid move")
+            await interaction.response.send_message("Invalid move", ephemeral=True)
         else:
             self.flip = True if self.flip is False else False
             self.player = self.black if self.player is self.white else self.white
-            fen = self.board.fen().split(" ")[0]
             embed = Embed(
                 title=f"{self.white} vs {self.black}",
                 description=f"{self.player.mention} 's turn",
@@ -70,14 +76,6 @@ class ChessView(View):
         await interaction.message.edit(
             content=f"{self.player.mention} won by resignation", view=None
         )
-
-    async def interaction_check(self, interaction: Interaction):
-        if interaction.user != self.player:
-            await interaction.response.send_message(
-                "It's not your turn", ephemeral=True
-            )
-            return False
-        return True
 
 
 class ChessModal(Modal):

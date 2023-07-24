@@ -1,6 +1,5 @@
 from typing import Optional
 
-import discord
 from discord import Member, User, app_commands
 from discord.ext import commands
 
