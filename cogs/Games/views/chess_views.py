@@ -21,8 +21,6 @@ class ChessView(View):
 
     @button(label="Move", style=ButtonStyle.green)
     async def move_button(self, interaction: Interaction, button: Button):
-        self.flip = True if self.flip is False else False
-        self.player = self.black if self.player is self.white else self.white
         legal_moves = [str(move) for move in list(self.board.legal_moves)]
         modal = ChessModal(title="Make your move")
         modal.add_item(TextInput(label="Your move", placeholder="example: e2e4"))
@@ -31,6 +29,7 @@ class ChessView(View):
                 label="Available moves",
                 style=TextStyle.long,
                 default=", ".join(legal_moves),
+                required=False,
             ),
         )
         await interaction.response.send_modal(modal)
@@ -41,6 +40,7 @@ class ChessView(View):
         try:
             self.board.push_uci(move)
             if self.board.is_checkmate():
+                fen = self.board.fen().split(" ")[0]
                 embed = Embed(
                     title=f"{self.white} vs {self.black}",
                     description=f"{self.white if self.player is self.black else self.black} won by checkmate!",
@@ -52,6 +52,8 @@ class ChessView(View):
         except Exception:
             await self.ctx.error("Invalid move")
         else:
+            self.flip = True if self.flip is False else False
+            self.player = self.black if self.player is self.white else self.white
             fen = self.board.fen().split(" ")[0]
             embed = Embed(
                 title=f"{self.white} vs {self.black}",
