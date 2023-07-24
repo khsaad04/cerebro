@@ -104,6 +104,23 @@ class Moderation(Plugin):
 
         await ctx.send(f"{member} has been banned for {reason}")
 
+    @commands.hybrid_command(
+        name="unban", description="Unban a person who is currently banned"
+    )
+    @commands.has_permissions(ban_members=True)
+    @commands.bot_has_permissions(ban_members=True)
+    @app_commands.describe(
+        user="The user you want to unban", reason="The reason for it"
+    )
+    async def unban_command(
+        self,
+        ctx: Context,
+        user: User,
+        *,
+        reason: Optional[str] = "no reason whatsoever",
+    ):
+        ...
+
 
 async def setup(bot: Bot):
     await bot.add_cog(Moderation(bot))
