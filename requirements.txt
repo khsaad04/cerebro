@@ -4,3 +4,4 @@ black
 isort
 chess
 humanfriendly
+flask
