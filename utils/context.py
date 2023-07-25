@@ -21,7 +21,9 @@ class Context(DefaultContext):
             embed.set_footer(
                 icon_url=self.author.avatar, text=f"invoked by {self.author}"
             )
-        return await super().send(embed=embed, **kwargs)
+            content = None
+
+        return await super().send(content, embed=embed, **kwargs)
 
     async def error(
         self,
@@ -37,4 +39,6 @@ class Context(DefaultContext):
             embed.set_footer(
                 icon_url=self.author.avatar, text=f"invoked by {self.author}"
             )
-        return await super().send(embed=embed, **kwargs)
+            content = None
+
+        return await super().send(content, embed=embed, ephemeral=True, **kwargs)

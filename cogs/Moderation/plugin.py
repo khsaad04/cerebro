@@ -1,7 +1,10 @@
+from datetime import timedelta
 from typing import Optional
 
+import discord
 from discord import Member, User, app_commands
 from discord.ext import commands
+from humanfriendly import InvalidTimespan, parse_timespan
 
 from cogs import Plugin
 from core import Bot
@@ -119,7 +122,107 @@ class Moderation(Plugin):
         *,
         reason: Optional[str] = "no reason whatsoever",
     ):
-        ...
+        try:
+            await ctx.guild.unban(user, reason=reason)
+        except discord.NotFound:
+            return await ctx.error(f"{user.mention} is not banned from this server.")
+        else:
+            await ctx.send(f"Unbanned {user.mention}")
+
+    # mute_command
+    @commands.hybrid_command(name="mute", description="Mute/timeout a member")
+    @commands.has_permissions(moderate_members=True)
+    @commands.bot_has_permissions(moderate_members=True)
+    @app_commands.describe(
+        member="The person you want to mute",
+        duration="The amount of time you wanna mute him for",
+        reason="The reason for it",
+    )
+    async def mute_command(
+        self,
+        ctx: Context,
+        member: Member,
+        duration: Optional[str] = "1d",
+        *,
+        reason: Optional[str] = "no reason whatsoever",
+    ):
+        if check_made := self.can_moderate(ctx, member):
+            return await ctx.error(check_made)
+
+        try:
+            real_duration = parse_timespan(duration)
+        except InvalidTimespan:
+            await ctx.error("Invalid duration")
+        else:
+            try:
+                await member.timeout(
+                    discord.utils.utcnow() + timedelta(seconds=real_duration),
+                    reason=reason,
+                )
+            except Exception:
+                await ctx.error("Something went wrong while tryig to mute that person!")
+            else:
+                await ctx.send(f"{member.mention} has been muted for {duration}")
+
+    @commands.hybrid_command(
+        name="unmute", description="Unmute/remove timeout from a member"
+    )
+    @commands.has_permissions(moderate_members=True)
+    @commands.bot_has_permissions(moderate_members=True)
+    @app_commands.describe(
+        member="The person you want to mute",
+        reason="The reason for it",
+    )
+    async def unmute_command(
+        self,
+        ctx: Context,
+        member: Member,
+        *,
+        reason: Optional[str] = "no reason whatsoever",
+    ):
+        if check_made := self.can_moderate(ctx, member):
+            return await ctx.error(check_made)
+
+        if not member.is_timed_out:
+            await ctx.error(f"{member.mention} is not timed out!")
+        else:
+            try:
+                await member.timeout(None)
+            except Exception:
+                await ctx.error("Something went wrong!")
+            else:
+                await ctx.send(f"Successfully unmuted {member.mention}")
+
+    # slowmode_command
+    @commands.hybrid_command(
+        name="slowmode", description="Set a slowmode for the particular channel"
+    )
+    @commands.has_permissions(manage_channels=True)
+    @commands.bot_has_permissions(manage_channels=True)
+    @app_commands.describe(seconds="Slowmode time")
+    async def slowmode_command(self, ctx: Context, seconds: int):
+        try:
+            await ctx.channel.edit(slowmode_delay=seconds)
+        except Exception:
+            await ctx.error("Couldn't set a slowmode")
+        else:
+            await ctx.send(f"Slowmode is now {seconds}s")
+
+    # purge_command
+    @commands.hybrid_command(
+        name="purge",
+        description="Purges the chat as per the given amount.",
+    )
+    @commands.has_permissions(manage_messages=True)
+    @commands.bot_has_permissions(manage_channels=True)
+    @app_commands.describe(amount="The number of messages to delete/purge")
+    async def clear_command(self, ctx: Context, amount=1):
+        try:
+            await ctx.channel.purge(limit=amount + 1)
+        except Exception:
+            await ctx.error("Couldn't purge for some reason")
+        else:
+            await ctx.send(f"deleted {amount} message(s)", delete_after=5.0)
 
 
 async def setup(bot: Bot):

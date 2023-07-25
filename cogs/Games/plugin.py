@@ -1,8 +1,13 @@
-from discord import Embed, Member
+import asyncio
+import time
+from random import choice, randint
+
+from discord import Color, Embed, Member
 from discord.ext import commands
+from discord.ui import View
 
 from cogs import Plugin
-from cogs.Games.views import ChessView
+from cogs.Games.views import ChessView, RespectButton
 from core import Bot
 from utils import Context
 
@@ -16,12 +21,75 @@ class Games(Plugin):
         view = ChessView(ctx, member)
         fen = view.board.fen().split(" ")[0]
         embed = Embed(
-            title=f"{view.white} vs {view.black}",
-            description=f"{view.player.mention} 's turn",
+            title="Chess",
+            description=f"{view.white} vs {view.black}",
         )
         embed.set_image(url=f"https://chessimageapi.khsaad1.repl.co/board?fen={fen}")
 
-        await ctx.send(embed=embed, view=view)
+        await ctx.send(f"{view.player.mention} 's turn", embed=embed, view=view)
+
+    @commands.hybrid_command(name="math", description="Solve 5 math problems asap")
+    async def math_command(self, ctx: Context):
+        def gen_math():
+            operator = str(choice(["+", "-", "*"]))
+            if operator == "*":
+                a = randint(1, 9)
+                b = randint(1, 9)
+            else:
+                a = randint(1, 99)
+                b = randint(1, 99)
+            prob = f"{a}{operator}{b}"
+            ans = {"+": a + b, "-": a - b, "*": a * b}[operator]
+            return prob, ans
+
+        embed = Embed(description="")
+        embed.set_footer(text=ctx.author.display_name, icon_url=ctx.author.avatar)
+        msg = await ctx.send(embed=embed)
+        start_time = time.time()
+        point = 0
+        while point < 5:
+            prob, ans = gen_math()
+            embed.description = f"{str(prob)}\nCorrect answers: {point}/5"
+            await msg.edit(embed=embed)
+
+            def check(message):
+                return (
+                    message.author.id == ctx.author.id
+                    and message.channel.id == ctx.channel.id
+                )
+
+            try:
+                response = await self.bot.wait_for("message", check=check, timeout=30.0)
+            except asyncio.TimeoutError:
+                embed.description = "Timeout"
+                await msg.edit(embed=embed)
+                return
+
+            if response.content == str(ans):
+                point += 1
+                embed.color = Color.green()
+            elif response.content == "420":
+                embed.description = "quit"
+                await msg.edit(embed=embed)
+                return
+            else:
+                embed.color = Color.red()
+
+            await msg.edit(embed=embed)
+
+        end_time = time.time()
+        time_diff = round(end_time - start_time, 5)
+        embed.description = f"5/5 | took {str(time_diff)}s"
+        await msg.edit(embed=embed)
+
+    @commands.hybrid_command(name="respect", description="Gain respect")
+    async def respect_command(self, ctx: Context):
+        view = View()
+        for i in range(5):
+            view.add_item(RespectButton(label="+"))
+        await ctx.send(
+            "Click one of the buttons to gain respect (odds are 1 in a 1000)", view=view
+        )
 
 
 async def setup(bot: Bot):

@@ -49,32 +49,41 @@ class ChessView(View):
             fen = self.board.fen().split(" ")[0]
             if self.board.is_checkmate():
                 embed = Embed(
-                    title=f"{self.white} vs {self.black}",
-                    description=f"{self.white if self.player is self.black else self.black} won by checkmate!",
+                    title="Chess",
+                    description="game over",
                 )
                 embed.set_image(
                     url=f"https://chessimageapi.khsaad1.repl.co/board?fen={fen}&flip={self.flip}&before={before}&after={after}"
                 )
-                return await interaction.message.edit(embed=embed, view=None)
+                return await interaction.message.edit(
+                    content=f"{self.white if self.player is self.black else self.black} won by checkmate!",
+                    embed=embed,
+                    view=None,
+                )
         except Exception:
             await interaction.response.send_message("Invalid move", ephemeral=True)
         else:
             self.flip = True if self.flip is False else False
             self.player = self.black if self.player is self.white else self.white
             embed = Embed(
-                title=f"{self.white} vs {self.black}",
-                description=f"{self.player.mention} 's turn",
+                title="Chess",
+                description=f"{self.white} vs {self.black}",
             )
             embed.set_image(
                 url=f"https://chessimageapi.khsaad1.repl.co/board?fen={fen}&flip={self.flip}&before={before}&after={after}"
             )
-            await interaction.message.edit(embed=embed, view=self)
+            await interaction.message.edit(
+                content=f"{self.player.mention}'s turn", embed=embed, view=self
+            )
 
     @button(label="Resign", style=ButtonStyle.danger)
     async def resign_button(self, interaction: Interaction, button: Button):
-        self.player = self.black if self.player is self.white else self.white
+        if interaction.user == self.white:
+            winner = self.black
+        else:
+            winner = self.white
         await interaction.message.edit(
-            content=f"{self.player.mention} won by resignation", view=None
+            content=f"{winner.mention} won by resignation", view=None
         )
 
 
