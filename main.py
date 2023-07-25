@@ -1,4 +1,6 @@
 import asyncio
+from flask import Flask
+from threading import Thread
 import os
 from threading import Thread
 
@@ -24,6 +26,25 @@ def run():
 def keep_alive():
     server = Thread(target=run)
     server.start()
+
+
+app = Flask("")
+
+
+@app.route("/")
+def main():
+    return "Your Bot Is Ready"
+
+
+def run():
+    app.run(host="0.0.0.0", port=8000)
+
+
+def keep_alive():
+    server = Thread(target=run)
+    server.start()
+
+token = os.environ.get("DISCORD_TOKEN")
 
 
 async def main():
