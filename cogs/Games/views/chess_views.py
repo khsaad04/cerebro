@@ -61,7 +61,7 @@ class ChessView(View):
                     view=None,
                 )
         except Exception:
-            await interaction.response.send_message("Invalid move", ephemeral=True)
+            return await interaction.response.send_message("Invalid move", ephemeral=True)
         else:
             self.flip = True if self.flip is False else False
             self.player = self.black if self.player is self.white else self.white
