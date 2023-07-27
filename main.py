@@ -44,8 +44,6 @@ def keep_alive():
     server = Thread(target=run)
     server.start()
 
-token = os.environ.get("DISCORD_TOKEN")
-
 
 async def main():
     setup_logging()
