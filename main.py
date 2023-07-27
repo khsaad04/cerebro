@@ -1,12 +1,28 @@
 import asyncio
 import os
+from threading import Thread
 
 from discord.utils import setup_logging
+from flask import Flask
 
 from core import Bot
-from keep_alive import keep_alive
 
 token = os.environ.get("TOKEN")
+app = Flask("")
+
+
+@app.route("/")
+def main():
+    return "Your Bot Is Ready"
+
+
+def run():
+    app.run(host="0.0.0.0", port=8000)
+
+
+def keep_alive():
+    server = Thread(target=run)
+    server.start()
 
 
 async def main():
