@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from datetime import timedelta
-from typing import Optional
+from typing import Optional, Union
 
 import discord
 from discord import Member, User, app_commands
@@ -12,14 +14,19 @@ from utils import Context
 
 
 class Moderation(Plugin):
-    def __init__(self, bot: Bot):
+    """
+    This is the Moderation cog. This cog includes most commands
+    that'll assist the moderators to maintain their servers.
+    """
+
+    def __init__(self, bot: Bot) -> None:
         self.bot: Bot = bot
 
     def can_moderate(
         self,
         ctx: Context,
         member: Member,
-    ):
+    ) -> Union[str, bool]:
         if isinstance(member, User):
             return False
 
@@ -56,7 +63,7 @@ class Moderation(Plugin):
         member: Member,
         *,
         reason: Optional[str] = "no reason whatsoever",
-    ):
+    ) -> None:
         if check_made := self.can_moderate(ctx, member):
             return await ctx.error(check_made)
 
@@ -88,7 +95,7 @@ class Moderation(Plugin):
         member: Member,
         *,
         reason: Optional[str] = "no reason whatsoever",
-    ):
+    ) -> None:
         if check_made := self.can_moderate(ctx, member):
             return await ctx.error(check_made)
 
@@ -121,7 +128,7 @@ class Moderation(Plugin):
         user: User,
         *,
         reason: Optional[str] = "no reason whatsoever",
-    ):
+    ) -> None:
         try:
             await ctx.guild.unban(user, reason=reason)
         except discord.NotFound:
@@ -145,7 +152,7 @@ class Moderation(Plugin):
         duration: Optional[str] = "1d",
         *,
         reason: Optional[str] = "no reason whatsoever",
-    ):
+    ) -> None:
         if check_made := self.can_moderate(ctx, member):
             return await ctx.error(check_made)
 
@@ -179,7 +186,7 @@ class Moderation(Plugin):
         member: Member,
         *,
         reason: Optional[str] = "no reason whatsoever",
-    ):
+    ) -> None:
         if check_made := self.can_moderate(ctx, member):
             return await ctx.error(check_made)
 
@@ -200,7 +207,7 @@ class Moderation(Plugin):
     @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     @app_commands.describe(seconds="Slowmode time")
-    async def slowmode_command(self, ctx: Context, seconds: int):
+    async def slowmode_command(self, ctx: Context, seconds: int) -> None:
         try:
             await ctx.channel.edit(slowmode_delay=seconds)
         except Exception:
@@ -216,7 +223,7 @@ class Moderation(Plugin):
     @commands.has_permissions(manage_messages=True)
     @commands.bot_has_permissions(manage_channels=True)
     @app_commands.describe(amount="The number of messages to delete/purge")
-    async def clear_command(self, ctx: Context, amount=1):
+    async def clear_command(self, ctx: Context, amount=1) -> None:
         try:
             await ctx.channel.purge(limit=amount + 1)
         except Exception:

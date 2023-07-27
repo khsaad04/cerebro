@@ -4,20 +4,25 @@ from random import choice, randint
 
 from discord import Color, Embed, Member
 from discord.ext import commands
-from discord.ui import View
 
 from cogs import Plugin
-from cogs.Games.views import ChessView, RespectButton
+from cogs.Games.views import ChessView
 from core import Bot
 from utils import Context
 
 
 class Games(Plugin):
-    def __init__(self, bot: Bot):
+    """
+    This is the Games cog, this cog contains games such as chess and math quiz
+    """
+
+    def __init__(self, bot: Bot) -> None:
         self.bot: Bot = bot
 
-    @commands.hybrid_command(name="chess")
-    async def chess_command(self, ctx: Context, member: Member):
+    @commands.hybrid_command(
+        name="chess", description="Multiplayer chess game in discord"
+    )
+    async def chess_command(self, ctx: Context, member: Member) -> None:
         view = ChessView(ctx, member)
         fen = view.board.fen().split(" ")[0]
         embed = Embed(
@@ -26,10 +31,10 @@ class Games(Plugin):
         )
         embed.set_image(url=f"https://chessimageapi.khsaad1.repl.co/board?fen={fen}")
 
-        await ctx.send(f"{view.player.mention} 's turn", embed=embed, view=view)
+        await ctx.send(f"{view.player.mention}'s turn", embed=embed, view=view)
 
     @commands.hybrid_command(name="math", description="Solve 5 math problems asap")
-    async def math_command(self, ctx: Context):
+    async def math_command(self, ctx: Context) -> None:
         def gen_math():
             operator = str(choice(["+", "-", "*"]))
             if operator == "*":
@@ -81,15 +86,6 @@ class Games(Plugin):
         time_diff = round(end_time - start_time, 5)
         embed.description = f"5/5 | took {str(time_diff)}s"
         await msg.edit(embed=embed)
-
-    @commands.hybrid_command(name="respect", description="Gain respect")
-    async def respect_command(self, ctx: Context):
-        view = View()
-        for i in range(5):
-            view.add_item(RespectButton(label="+"))
-        await ctx.send(
-            "Click one of the buttons to gain respect (odds are 1 in a 1000)", view=view
-        )
 
 
 async def setup(bot: Bot):

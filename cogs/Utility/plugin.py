@@ -8,21 +8,25 @@ from utils import Context
 
 
 class Utility(Plugin):
+    """
+    This is the Utility cog, it contains useful utility commands.
+    """
+
     def __init__(self, bot: Bot) -> None:
         self.bot: Bot = bot
 
     @commands.hybrid_command(name="ping", description="Shows the latency of the bot.")
-    async def ping_command(self, ctx: Context):
+    async def ping_command(self, ctx: Context) -> None:
         await ctx.send(f"{self.bot.latency*1000:.2f} ms")
 
     @commands.hybrid_command(name="embed", description="Embed builder")
-    async def embed_constructor_command(self, ctx: Context):
+    async def embed_constructor_command(self, ctx: Context) -> None:
         embed = Template.get_default_embed()
         view = EmbedBuilderSelect(embed=embed, ctx=ctx)
         await ctx.send(embed=embed, view=view)
 
     @commands.hybrid_command(name="calc", description="Calculator made using buttons")
-    async def calculator_command(self, ctx: Context):
+    async def calculator_command(self, ctx: Context) -> None:
         view = CalculatorView(ctx)
         embed = Embed(description="```                            \n \n ```")
 

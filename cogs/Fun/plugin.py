@@ -9,6 +9,10 @@ from utils import Context
 
 
 class Fun(Plugin):
+    """
+    This is the Fun cog, this cog contains commands for time pass.
+    """
+
     def __init__(self, bot: Bot) -> None:
         self.bot: Bot = bot
 
@@ -18,8 +22,8 @@ class Fun(Plugin):
         description="Ask any question for a random answer.",
     )
     @app_commands.describe(question="The question you want to ask")
-    async def _8ball_command(self, ctx: Context, *, question: str):
-        replies = [
+    async def _8ball_command(self, ctx: Context, *, question: str) -> None:
+        replies = set(
             "It is certain.",
             "It is decidedly so.",
             "Without a doubt.",
@@ -40,7 +44,7 @@ class Fun(Plugin):
             "My sources say no.",
             "Outlook not so good.",
             "Very doubtful.",
-        ]
+        )
 
         ans = f"{ctx.author.mention} asked: {question} \nAns: {random.choice(replies)}"
 
