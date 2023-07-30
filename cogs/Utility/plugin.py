@@ -1,6 +1,6 @@
 from typing import Optional
 
-from discord import Embed, Member
+from discord import Embed, Member, app_commands
 from discord.ext import commands
 
 from cogs import Plugin
@@ -35,6 +35,7 @@ class Utility(Plugin):
         await ctx.send(embed=embed, view=view)
 
     @commands.hybrid_command(name="userinfo", description="Shows a user's information")
+    @app_commands.describe(member="The person's info you want(leave empty for yours)")
     async def userinfo_command(self, ctx: Context, member: Optional[Member]):
         if not member:
             member = ctx.author
@@ -56,6 +57,7 @@ class Utility(Plugin):
         await ctx.send(embed=embed)
 
     @commands.hybrid_command(name="avatar", description="Shows the avatar of the user")
+    @app_commands.describe(member="The person's info you want(leave empty for yours)")
     async def avatar_command(self, ctx: Context, member: Optional[Member]):
         if not member:
             member = ctx.author
