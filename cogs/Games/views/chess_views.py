@@ -1,3 +1,5 @@
+from typing import Any
+
 from chess import Board
 from discord import ButtonStyle, Embed, Interaction, Member, TextStyle
 from discord.ui import Button, Modal, TextInput, View, button
@@ -90,7 +92,7 @@ class ChessView(View):
 
 
 class ChessModal(Modal):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any):
         super().__init__(*args, **kwargs)
 
     async def on_submit(self, interaction: Interaction):
