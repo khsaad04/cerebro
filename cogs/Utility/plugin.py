@@ -55,6 +55,17 @@ class Utility(Plugin):
 
         await ctx.send(embed=embed)
 
+    @commands.hybrid_command(name="avatar", description="Shows the avatar of the user")
+    async def avatar_command(self, ctx: Context, member: Optional[Member]):
+        if not member:
+            member = ctx.author
+
+        embed = Embed(
+            title="Avatar", description=f"{member}'s avatar", color=member.color
+        )
+        embed.set_image(url=member.avatar)
+        await ctx.send(embed=embed)
+
 
 async def setup(bot: Bot):
     await bot.add_cog(Utility(bot))
