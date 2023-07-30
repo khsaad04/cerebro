@@ -16,7 +16,7 @@ class Bot(commands.Bot):
     def __init__(self, *args: Any, **kwargs: Any):
         help_command = MyHelp()
         super().__init__(
-            command_prefix=commands.when_mentioned_or(">"),
+            command_prefix=commands.when_mentioned_or("."),
             intents=Intents.all(),
             case_insensitive=True,
             help_command=help_command,
