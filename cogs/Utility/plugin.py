@@ -1,4 +1,6 @@
-from discord import Embed
+from typing import Optional
+
+from discord import Embed, Member
 from discord.ext import commands
 
 from cogs import Plugin
@@ -31,6 +33,27 @@ class Utility(Plugin):
         embed = Embed(description="```                            \n \n ```")
 
         await ctx.send(embed=embed, view=view)
+
+    @commands.hybrid_command(name="userinfo", description="Shows a user's information")
+    async def userinfo_command(self, ctx: Context, member: Optional[Member]):
+        if not member:
+            member = ctx.author
+
+        embed = Embed(
+            title="User Info", description=f"{member}'s user info", color=member.color
+        )
+        embed.set_thumbnail(url=member.avatar)
+        embed.add_field(name="ID", value=member.id, inline=True)
+        embed.add_field(name="Nickname", value=member.nick or "None", inline=True)
+        embed.add_field(name="Account created", value=member.created_at, inline=False)
+        embed.add_field(name="Joined Server", value=member.joined_at, inline=False)
+        embed.add_field(
+            name="Roles",
+            value="`" "``, ".join([str(role) for role in member.roles]),
+            inline=False,
+        )
+
+        await ctx.send(embed=embed)
 
 
 async def setup(bot: Bot):
