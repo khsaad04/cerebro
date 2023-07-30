@@ -10,7 +10,7 @@ from utils import Context
 
 class Fun(Plugin):
     """
-    This is the Fun cog, this cog contains commands for time pass.
+    This is the Fun cog, this cog contains commands for time passing.
     """
 
     def __init__(self, bot: Bot) -> None:
