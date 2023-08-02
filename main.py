@@ -1,9 +1,9 @@
 import asyncio
-from threading import Thread
-from flask import Flask
 import os
+from threading import Thread
 
 from discord.utils import setup_logging
+from flask import Flask
 
 from core import Bot
 
