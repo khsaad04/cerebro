@@ -28,6 +28,7 @@ def keep_alive():
 
 async def main():
     setup_logging()
+    keep_alive()
     async with Bot() as bot:
         await bot.start(token=token, reconnect=True)
 
