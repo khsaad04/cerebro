@@ -50,7 +50,7 @@ class Utility(Plugin):
         embed.add_field(name="Joined Server", value=member.joined_at, inline=False)
         embed.add_field(
             name="Roles",
-            value="`" "``, ".join([str(role) for role in member.roles]),
+            value=", ".join([role.mention for role in member.roles][1:]),
             inline=False,
         )
 
