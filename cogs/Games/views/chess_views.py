@@ -46,9 +46,18 @@ class ChessView(View):
         move = str(modal.children[0])
         before = move[:-2]
         after = move[2:]
+
         try:
             self.board.push_uci(move)
+        except Exception:
+            return await interaction.followup.send(
+                content="Invalid move", ephemeral=True
+            )
+        else:
             fen = self.board.fen().split(" ")[0]
+            self.flip = True if self.flip is False else False
+            self.player = self.black if self.player is self.white else self.white
+
             if self.board.is_checkmate():
                 embed = Embed(
                     title="Chess",
@@ -58,17 +67,11 @@ class ChessView(View):
                     url=f"https://chessimageapi.khsaad1.repl.co/board?fen={fen}&flip={self.flip}&before={before}&after={after}"
                 )
                 return await interaction.message.edit(
-                    content=f"{self.white if self.player is self.black else self.black} won by checkmate!",
+                    content=f"{self.player} won by checkmate!",
                     embed=embed,
                     view=None,
                 )
-        except Exception:
-            return await interaction.response.send_message(
-                "Invalid move", ephemeral=True
-            )
-        else:
-            self.flip = True if self.flip is False else False
-            self.player = self.black if self.player is self.white else self.white
+
             embed = Embed(
                 title="Chess",
                 description=f"{self.white} vs {self.black}",
