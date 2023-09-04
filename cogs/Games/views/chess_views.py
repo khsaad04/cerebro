@@ -1,4 +1,7 @@
-from typing import Any
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import Any
 
 from chess import Board
 from discord import ButtonStyle, Embed, Interaction, Member, TextStyle

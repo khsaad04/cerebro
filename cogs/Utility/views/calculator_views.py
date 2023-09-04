@@ -1,4 +1,7 @@
-from typing import Any
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import Any
 
 from discord import ButtonStyle, Embed, Interaction
 from discord.ui import Button, View

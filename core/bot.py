@@ -1,6 +1,9 @@
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import Any, Union
 import os
 from logging import getLogger
-from typing import Any, Union
 
 from discord import Intents, Interaction, Message
 from discord.ext import commands
