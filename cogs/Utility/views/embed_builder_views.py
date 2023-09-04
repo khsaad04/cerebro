@@ -1,7 +1,4 @@
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from typing import Any
+from typing import Any
 
 import discord
 from discord import ButtonStyle, Embed, Interaction, SelectOption

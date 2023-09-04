@@ -1,7 +1,4 @@
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from typing import Optional
+from typing import Optional
 
 from discord import Embed, Member, app_commands
 from discord.ext import commands

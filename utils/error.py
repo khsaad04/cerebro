@@ -1,10 +1,6 @@
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from typing import Any
-
 import sys
 import traceback
+from typing import Any
 
 from discord import Embed
 from discord.ext.commands import (BadArgument, ChannelNotFound, Cog,

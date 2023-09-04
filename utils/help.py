@@ -1,7 +1,4 @@
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from typing import Any, List, Mapping, Optional
+from typing import Any, List, Mapping, Optional
 
 import discord
 from discord import Embed
