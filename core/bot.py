@@ -1,6 +1,6 @@
 import os
 from logging import getLogger
-from typing import Any, Union
+from typing import Union
 
 from discord import Intents, Interaction, Message
 from discord.ext import commands
@@ -13,7 +13,7 @@ log = getLogger("Bot")
 
 
 class Bot(commands.Bot):
-    def __init__(self, *args: Any, **kwargs: Any):
+    def __init__(self):
         help_command = MyHelp()
         super().__init__(
             command_prefix=commands.when_mentioned_or(">"),
@@ -46,7 +46,7 @@ class Bot(commands.Bot):
             await self.load_extension("utils.error")
             log.info("Error handler ready")
         except Exception as e:
-            log.info(f"Couldn't load error handler")
+            log.info(f"Couldn't load error handler because of {e}")
         synced_commands = await self.tree.sync()
         log.info(f"Synced {len(synced_commands)} commands")
         log.info("Setup complete.")
