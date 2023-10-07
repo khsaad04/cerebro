@@ -13,8 +13,8 @@ class Plugin(Cog):
     def __init__(self, bot: Bot) -> None:
         super().__init__()
 
-    async def cog_load(self):
+    async def cog_load(self) -> None:
         log.info(f"Loaded {self.qualified_name} cog")
 
-    async def cog_unload(self):
+    async def cog_unload(self) -> None:
         log.info(f"Unloaded {self.qualified_name} cog")

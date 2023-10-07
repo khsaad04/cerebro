@@ -88,5 +88,5 @@ class Games(Plugin):
         await msg.edit(embed=embed)
 
 
-async def setup(bot: Bot):
+async def setup(bot: Bot) -> None:
     await bot.add_cog(Games(bot))

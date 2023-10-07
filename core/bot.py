@@ -13,7 +13,7 @@ log = getLogger("Bot")
 
 
 class Bot(commands.Bot):
-    def __init__(self):
+    def __init__(self) -> None:
         help_command = MyHelp()
         super().__init__(
             command_prefix=commands.when_mentioned_or("."),
@@ -22,19 +22,19 @@ class Bot(commands.Bot):
             help_command=help_command,
         )
 
-    async def on_connect(self):
+    async def on_connect(self) -> None:
         log.info(f"Connected to discord as {self.user}(ID:{self.user.id})")
 
-    async def on_disconnect(self):
+    async def on_disconnect(self) -> None:
         log.info("Bot disconnected")
 
-    async def on_resumed(self):
+    async def on_resumed(self) -> None:
         log.info("Bot resumed")
 
-    async def on_ready(self):
+    async def on_ready(self) -> None:
         log.info("Bot ready")
 
-    async def setup_hook(self):
+    async def setup_hook(self) -> None:
         log.info("Running setup...")
         for file in os.listdir("./cogs"):
             if not file.startswith("_"):
@@ -51,5 +51,7 @@ class Bot(commands.Bot):
         log.info(f"Synced {len(synced_commands)} commands")
         log.info("Setup complete.")
 
-    async def get_context(self, origin: Union[Message, Interaction], *, cls=Context):
+    async def get_context(
+        self, origin: Union[Message, Interaction], *, cls=Context
+    ) -> Context:
         return await super().get_context(origin, cls=cls)

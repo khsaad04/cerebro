@@ -36,7 +36,7 @@ class Utility(Plugin):
 
     @commands.hybrid_command(name="userinfo", description="Shows a user's information")
     @app_commands.describe(member="The person's info you want(leave empty for yours)")
-    async def userinfo_command(self, ctx: Context, member: Optional[Member]):
+    async def userinfo_command(self, ctx: Context, member: Optional[Member]) -> None:
         if not member:
             member = ctx.author
 
@@ -58,7 +58,7 @@ class Utility(Plugin):
 
     @commands.hybrid_command(name="avatar", description="Shows the avatar of the user")
     @app_commands.describe(member="The person's info you want(leave empty for yours)")
-    async def avatar_command(self, ctx: Context, member: Optional[Member]):
+    async def avatar_command(self, ctx: Context, member: Optional[Member]) -> None:
         if not member:
             member = ctx.author
 
@@ -69,5 +69,5 @@ class Utility(Plugin):
         await ctx.send(embed=embed)
 
 
-async def setup(bot: Bot):
+async def setup(bot: Bot) -> None:
     await bot.add_cog(Utility(bot))

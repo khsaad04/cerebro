@@ -9,7 +9,7 @@ __all__ = ("CalculatorView",)
 
 
 class CalculatorView(View):
-    def __init__(self, ctx: Context):
+    def __init__(self, ctx: Context) -> None:
         self.equation: str = ""
         self.display: str = ""
         self.ctx: Context = ctx
@@ -27,7 +27,7 @@ class CalculatorView(View):
 
             self.add_item(CalculatorButton(label=label, row=row // 4, style=style))
 
-    async def interaction_check(self, interaction: Interaction):
+    async def interaction_check(self, interaction: Interaction) -> bool:
         if interaction.user != self.ctx.author:
             await interaction.response.send_message(
                 "Let bro do his thing, you can use your own calculator", ephemeral=True
@@ -37,10 +37,7 @@ class CalculatorView(View):
 
 
 class CalculatorButton(Button):
-    def __init__(self, *args: Any, **kwargs: Any):
-        super().__init__(*args, **kwargs)
-
-    async def callback(self, interaction: Interaction):
+    async def callback(self, interaction: Interaction) -> None:
         view: CalculatorView = self.view
         label: str = self.label
         match label:

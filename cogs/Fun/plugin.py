@@ -51,5 +51,5 @@ class Fun(Plugin):
         await ctx.send(ans)
 
 
-async def setup(bot: Bot):
+async def setup(bot: Bot) -> None:
     await bot.add_cog(Fun(bot))

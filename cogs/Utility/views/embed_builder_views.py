@@ -13,7 +13,7 @@ __all__ = (
 
 
 class EmbedBuilderSelect(View):
-    def __init__(self, embed: Embed, ctx: Context):
+    def __init__(self, embed: Embed, ctx: Context) -> None:
         super().__init__()
         self.embed: Embed = embed
         self.ctx: Context = ctx
@@ -34,7 +34,7 @@ class EmbedBuilderSelect(View):
         max_values=1,
         row=0,
     )
-    async def select_callback(self, interaction: Interaction, select: Select):
+    async def select_callback(self, interaction: Interaction, select: Select) -> None:
         match select.values[0]:
             case "td":
                 await Template.set_title_description(self.embed, interaction)
@@ -59,7 +59,7 @@ class EmbedBuilderSelect(View):
         )
 
     @button(label="Done", style=ButtonStyle.green, row=1)
-    async def done_callback(self, interaction: Interaction, button: Button):
+    async def done_callback(self, interaction: Interaction, button: Button) -> None:
         view = View()
         view.add_item(ChannelSelect(embed=self.embed))
         await interaction.message.edit(
@@ -67,14 +67,14 @@ class EmbedBuilderSelect(View):
         )
 
     @button(label="Cancel", style=ButtonStyle.danger, row=1)
-    async def cancel_callback(self, interaction: Interaction, button: Button):
+    async def cancel_callback(self, interaction: Interaction, button: Button) -> None:
         await interaction.response.defer()
         for childrens in self.children:
             childrens.disabled = True
 
         await interaction.message.edit(content="Aight", embed=None, view=self)
 
-    async def interaction_check(self, interaction: Interaction):
+    async def interaction_check(self, interaction: Interaction) -> bool:
         if interaction.user != self.ctx.author:
             await interaction.response.send_message(
                 "Let bro do his thing, you can use your own builder", ephemeral=True
@@ -85,7 +85,7 @@ class EmbedBuilderSelect(View):
 
 
 class ChannelSelect(discord.ui.ChannelSelect):
-    def __init__(self, embed: Embed, *args: Any, **kwargs: Any):
+    def __init__(self, embed: Embed, *args: Any, **kwargs: Any) -> None:
         super().__init__(
             channel_types=[discord.ChannelType.text],
             placeholder="Select channel...",
@@ -95,7 +95,7 @@ class ChannelSelect(discord.ui.ChannelSelect):
         )
         self.embed: Embed = embed
 
-    async def callback(self, interaction: Interaction):
+    async def callback(self, interaction: Interaction) -> None:
         embed = self.embed
         channel = self.values[0]
         destination = await channel.fetch()
@@ -114,7 +114,7 @@ class Template:
         )
         return embed
 
-    async def set_title_description(embed: Embed, interaction: Interaction):
+    async def set_title_description(embed: Embed, interaction: Interaction) -> None:
         modal = ModalInput(title="Edit title and description")
         modal.add_item(TextInput(label="Title", required=False, default=embed.title))
         modal.add_item(
@@ -131,7 +131,7 @@ class Template:
         embed.title = title
         embed.description = description
 
-    async def set_color(embed: Embed, interaction: Interaction):
+    async def set_color(embed: Embed, interaction: Interaction) -> None:
         color = ""
         modal = ModalInput(title="Edit color")
         modal.add_item(
@@ -149,7 +149,7 @@ class Template:
             color = int(color, 16)
         embed.color = color
 
-    async def set_url(embed: Embed, interaction: Interaction):
+    async def set_url(embed: Embed, interaction: Interaction) -> None:
         modal = ModalInput(title="Edit url")
         modal.add_item(TextInput(label="Url", required=False, default=embed.url))
         await interaction.response.send_modal(modal)
@@ -157,7 +157,7 @@ class Template:
         url = str(modal.children[0])
         embed.url = url
 
-    async def set_image(embed: Embed, interaction: Interaction):
+    async def set_image(embed: Embed, interaction: Interaction) -> None:
         modal = ModalInput(title="Edit image")
         modal.add_item(TextInput(label="Url", required=False, default=embed.image.url))
         await interaction.response.send_modal(modal)
@@ -165,7 +165,7 @@ class Template:
         url = str(modal.children[0])
         embed.set_image(url=url)
 
-    async def set_thumbnail(embed: Embed, interaction: Interaction):
+    async def set_thumbnail(embed: Embed, interaction: Interaction) -> None:
         modal = ModalInput(title="Edit thumbnail")
         modal.add_item(
             TextInput(label="Url", required=False, default=embed.thumbnail.url)
@@ -175,7 +175,7 @@ class Template:
         url = str(modal.children[0])
         embed.set_thumbnail(url=url)
 
-    async def set_author(embed: Embed, interaction: Interaction):
+    async def set_author(embed: Embed, interaction: Interaction) -> None:
         modal = ModalInput(title="Edit author")
         modal.add_item(
             TextInput(label="Name", required=False, default=embed.author.name)
@@ -195,7 +195,7 @@ class Template:
         icon_url = str(modal.children[2])
         embed.set_author(name=name, url=url, icon_url=icon_url)
 
-    async def set_footer(embed: Embed, interaction: Interaction):
+    async def set_footer(embed: Embed, interaction: Interaction) -> None:
         modal = ModalInput(title="Edit footer")
         modal.add_item(
             TextInput(label="Text", required=False, default=embed.footer.text)
@@ -213,7 +213,7 @@ class Template:
         icon_url = str(modal.children[1])
         embed.set_footer(text=text, icon_url=icon_url)
 
-    async def add_field(embed: Embed, interaction: Interaction):
+    async def add_field(embed: Embed, interaction: Interaction) -> None:
         modal = ModalInput(title="Add field")
         modal.add_item(TextInput(label="Name", required=False))
         modal.add_item(
@@ -231,7 +231,7 @@ class Template:
         if name:
             embed.add_field(name=name, value=value, inline=inline)
 
-    async def remove_field(embed: Embed, interaction: Interaction):
+    async def remove_field(embed: Embed, interaction: Interaction) -> None:
         modal = ModalInput(title="Remove embed")
         modal.add_item(TextInput(label="Index", placeholder="starts from 0"))
         await interaction.response.send_modal(modal)
@@ -241,8 +241,5 @@ class Template:
 
 
 class ModalInput(Modal):
-    def __init__(self, *args: Any, **kwargs: Any):
-        super().__init__(*args, **kwargs)
-
-    async def on_submit(self, interaction: Interaction):
+    async def on_submit(self, interaction: Interaction) -> None:
         await interaction.response.defer()
