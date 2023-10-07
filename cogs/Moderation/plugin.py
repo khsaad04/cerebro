@@ -230,5 +230,5 @@ class Moderation(Plugin):
             await ctx.send(f"deleted {amount} message(s)", delete_after=5.0)
 
 
-async def setup(bot: Bot):
+async def setup(bot: Bot) -> None:
     await bot.add_cog(Moderation(bot))

@@ -10,7 +10,7 @@ __all__ = ("ChessView",)
 
 
 class ChessView(View):
-    def __init__(self, ctx: Context, member: Member):
+    def __init__(self, ctx: Context, member: Member) -> None:
         super().__init__()
 
         self.white = ctx.author
@@ -22,7 +22,7 @@ class ChessView(View):
         self.ctx: Context = ctx
 
     @button(label="Move", style=ButtonStyle.green)
-    async def move_button(self, interaction: Interaction, button: Button):
+    async def move_button(self, interaction: Interaction, button: Button) -> None:
         if interaction.user != self.player:
             return await interaction.response.send_message(
                 "It's not your turn", ephemeral=True
@@ -54,7 +54,7 @@ class ChessView(View):
                 content="Invalid move", ephemeral=True
             )
         else:
-            fen = self.board.fen().split(" ")[0]
+            fen = self.board.fen().split()[0]
             self.flip = True if self.flip is False else False
             self.player = self.black if self.player is self.white else self.white
 
@@ -84,7 +84,7 @@ class ChessView(View):
             )
 
     @button(label="Resign", style=ButtonStyle.danger)
-    async def resign_button(self, interaction: Interaction, button: Button):
+    async def resign_button(self, interaction: Interaction, button: Button) -> None:
         if interaction.user == self.white:
             winner = self.black
         else:
@@ -95,8 +95,5 @@ class ChessView(View):
 
 
 class ChessModal(Modal):
-    def __init__(self, *args: Any, **kwargs: Any):
-        super().__init__(*args, **kwargs)
-
-    async def on_submit(self, interaction: Interaction):
+    async def on_submit(self, interaction: Interaction) -> None:
         await interaction.response.defer()
