@@ -47,6 +47,13 @@ class Bot(commands.Bot):
             log.info("Error handler ready")
         except Exception as e:
             log.info(f"Couldn't load error handler because of {e}")
+
+        try:
+            await self.load_extension("jishaku")
+            log.info("Loaded Jishaku")
+        except Exception as e:
+            log.info(f"Couldn't load Jishaku because of {e}")
+
         synced_commands = await self.tree.sync()
         log.info(f"Synced {len(synced_commands)} commands")
         log.info("Setup complete.")
