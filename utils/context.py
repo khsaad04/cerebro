@@ -15,7 +15,7 @@ class Context(DefaultContext):
         create_embed: Optional[bool] = False,
         **kwargs: Any,
     ):
-        if create_embed and embed:
+        if create_embed and embed is None:
             embed = Embed(
                 title=self.command.qualified_name, description=content, color=0xC246B3
             )
