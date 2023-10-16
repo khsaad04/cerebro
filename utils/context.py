@@ -12,9 +12,10 @@ class Context(DefaultContext):
         content: Optional[str] = None,
         *args: Any,
         embed: Optional[Embed] = None,
+        create_embed: Optional[bool] = False,
         **kwargs: Any,
     ):
-        if embed is None:
+        if create_embed and embed is None:
             embed = Embed(
                 title=self.command.qualified_name, description=content, color=0xC246B3
             )
@@ -32,7 +33,7 @@ class Context(DefaultContext):
         embed: Optional[Embed] = None,
         **kwargs: Any,
     ):
-        if embed is None:
+        if create_embed and embed:
             embed = Embed(
                 title="An error occurred", description=content, color=Color.red()
             )

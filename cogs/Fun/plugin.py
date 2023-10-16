@@ -48,7 +48,7 @@ class Fun(Plugin):
 
         ans = f"{ctx.author.mention} asked: {question} \nAns: {random.choice(replies)}"
 
-        await ctx.send(ans)
+        await ctx.send(ans, create_embed=True)
 
 
 async def setup(bot: Bot) -> None:
