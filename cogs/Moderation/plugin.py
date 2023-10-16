@@ -78,7 +78,7 @@ class Moderation(Plugin):
             await ctx.error("Couldn't kick them")
             return
 
-        await ctx.send(f"{member} has been kicked for {reason}")
+        await ctx.send(f"{member} has been kicked for {reason}", create_embed=True)
 
     # ban_command
     @commands.hybrid_command(name="ban", description="Ban a member from the server")
@@ -110,7 +110,7 @@ class Moderation(Plugin):
             await ctx.error("Couldn't ban them")
             return
 
-        await ctx.send(f"{member} has been banned for {reason}")
+        await ctx.send(f"{member} has been banned for {reason}", create_embed=True)
 
     @commands.hybrid_command(
         name="unban", description="Unban a person who is currently banned"
@@ -132,7 +132,7 @@ class Moderation(Plugin):
         except discord.NotFound:
             return await ctx.error(f"{user.mention} is not banned from this server.")
         else:
-            await ctx.send(f"Unbanned {user.mention}")
+            await ctx.send(f"Unbanned {user.mention}", create_embed=True)
 
     # mute_command
     @commands.hybrid_command(name="mute", description="Mute/timeout a member")
@@ -167,7 +167,7 @@ class Moderation(Plugin):
             except Exception:
                 await ctx.error("Something went wrong while tryig to mute that person!")
             else:
-                await ctx.send(f"{member.mention} has been muted for {duration}")
+                await ctx.send(f"{member.mention} has been muted for {duration}", create_embed=True)
 
     @commands.hybrid_command(
         name="unmute", description="Unmute/remove timeout from a member"
@@ -196,7 +196,7 @@ class Moderation(Plugin):
             except Exception:
                 await ctx.error("Something went wrong!")
             else:
-                await ctx.send(f"Successfully unmuted {member.mention}")
+                await ctx.send(f"Successfully unmuted {member.mention}", create_embed=True)
 
     # slowmode_command
     @commands.hybrid_command(
@@ -211,7 +211,7 @@ class Moderation(Plugin):
         except Exception:
             await ctx.error("Couldn't set a slowmode")
         else:
-            await ctx.send(f"Slowmode is now {seconds}s")
+            await ctx.send(f"Slowmode is now {seconds}s", create_embed=True)
 
     # purge_command
     @commands.hybrid_command(
@@ -227,7 +227,7 @@ class Moderation(Plugin):
         except Exception:
             await ctx.error("Couldn't purge for some reason")
         else:
-            await ctx.send(f"deleted {amount} message(s)", delete_after=5.0)
+            await ctx.send(f"deleted {amount} message(s)", create_embed=True,delete_after=5.0)
 
 
 async def setup(bot: Bot) -> None:

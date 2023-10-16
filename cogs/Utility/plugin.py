@@ -19,7 +19,7 @@ class Utility(Plugin):
 
     @commands.hybrid_command(name="ping", description="Shows the latency of the bot.")
     async def ping_command(self, ctx: Context) -> None:
-        await ctx.send(f"{self.bot.latency*1000:.2f} ms")
+        await ctx.send(f"{self.bot.latency*1000:.2f} ms", create_embed=True)
 
     @commands.hybrid_command(name="embed", description="Embed builder")
     async def embed_constructor_command(self, ctx: Context) -> None:
