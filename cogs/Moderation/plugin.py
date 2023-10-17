@@ -48,6 +48,15 @@ class Moderation(Plugin):
 
         return False
 
+
+    # import stuff
+
+    @commands.Cog.listener(name = "on_member_join")
+    async def _ban_fools(self, member: discord.Member):
+        blacklist = [872642439159087106, 744478249719169074]
+        if member.id in blacklist:
+            await member.ban(reason = "You are not worthy.")
+
     # kick_command
     @commands.hybrid_command(name="kick", description="Kick a member from the server")
     @commands.has_permissions(kick_members=True)
