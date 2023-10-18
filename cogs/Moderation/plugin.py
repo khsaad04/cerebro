@@ -49,11 +49,11 @@ class Moderation(Plugin):
         return False
 
     # import stuff
-    @commands.Cog.listener(name = "on_member_join")
+    @commands.Cog.listener(name="on_member_join")
     async def _ban_fools(self, member: discord.Member):
         blacklist = [872642439159087106, 744478249719169074]
         if member.id in blacklist:
-            await member.ban(reason = "You are not worthy.")
+            await member.ban(reason="You are not worthy.")
 
     # kick_command
     @commands.hybrid_command(name="kick", description="Kick a member from the server")
@@ -174,7 +174,9 @@ class Moderation(Plugin):
             except Exception:
                 await ctx.error("Something went wrong while tryig to mute that person!")
             else:
-                await ctx.send(f"{member.mention} has been muted for {duration}", create_embed=True)
+                await ctx.send(
+                    f"{member.mention} has been muted for {duration}", create_embed=True
+                )
 
     @commands.hybrid_command(
         name="unmute", description="Unmute/remove timeout from a member"
@@ -203,7 +205,9 @@ class Moderation(Plugin):
             except Exception:
                 await ctx.error("Something went wrong!")
             else:
-                await ctx.send(f"Successfully unmuted {member.mention}", create_embed=True)
+                await ctx.send(
+                    f"Successfully unmuted {member.mention}", create_embed=True
+                )
 
     # slowmode_command
     @commands.hybrid_command(
@@ -234,7 +238,9 @@ class Moderation(Plugin):
         except Exception:
             await ctx.error("Couldn't purge for some reason")
         else:
-            await ctx.send(f"deleted {amount} message(s)", create_embed=True,delete_after=5.0)
+            await ctx.send(
+                f"deleted {amount} message(s)", create_embed=True, delete_after=5.0
+            )
 
 
 async def setup(bot: Bot) -> None:
