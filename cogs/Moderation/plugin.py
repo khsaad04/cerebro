@@ -48,9 +48,7 @@ class Moderation(Plugin):
 
         return False
 
-
     # import stuff
-
     @commands.Cog.listener(name = "on_member_join")
     async def _ban_fools(self, member: discord.Member):
         blacklist = [872642439159087106, 744478249719169074]
