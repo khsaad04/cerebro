@@ -25,7 +25,9 @@ class MyHelp(HelpCommand):
             if command_names:
                 cog_name = getattr(cog, "qualified_name", "Misc")
                 embed.add_field(
-                    name=cog_name, value="\n".join(command_names), inline=False
+                    name=cog_name,
+                    value="`" + "\n".join(command_names) + "`",
+                    inline=True,
                 )
 
         channel = self.get_destination()
