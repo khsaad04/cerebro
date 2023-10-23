@@ -1,7 +1,7 @@
 from typing import Any, List, Mapping, Optional
 
 import discord
-from discord import Embed
+from discord import Embed, SelectOption
 from discord.ext.commands import Cog, Command, Group, HelpCommand
 
 __all__ = ("MyHelp",)
@@ -25,7 +25,9 @@ class MyHelp(HelpCommand):
             if command_names:
                 cog_name = getattr(cog, "qualified_name", "Misc")
                 embed.add_field(
-                    name=cog_name, value="\n".join(command_names), inline=False
+                    name=cog_name,
+                    value="```\n" + "\n".join(command_names) + "```",
+                    inline=True,
                 )
 
         channel = self.get_destination()
