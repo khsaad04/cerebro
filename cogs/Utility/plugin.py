@@ -45,7 +45,8 @@ class Utility(Plugin):
         )
         embed.set_thumbnail(url=member.avatar)
         embed.add_field(name="ID", value=member.id, inline=True)
-        embed.add_field(name="Nickname", value=member.nick or "None", inline=True)
+        if member.nick is not None:
+            embed.add_field(name="Nickname", value=member.nick, inline=True)
         embed.add_field(
             name="Account created",
             value=f"{member.created_at.strftime('%A, %B %d, %Y (%r)')} UTC",
