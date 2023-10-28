@@ -31,7 +31,8 @@ class Games(Plugin):
         )
         embed.set_image(url=f"https://chessimageapi.khsaad1.repl.co/board?fen={fen}")
 
-        await ctx.send(f"{view.player.mention}'s turn", embed=embed, view=view)
+        msg = await ctx.send(f"{view.player.mention}'s turn", embed=embed, view=view)
+        await msg.create_thread(name="Game chat", auto_archive_duration=1440)
 
     @commands.hybrid_command(name="math", description="Solve 5 math problems asap")
     async def math_command(self, ctx: Context) -> None:

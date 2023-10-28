@@ -46,13 +46,23 @@ class Utility(Plugin):
         embed.set_thumbnail(url=member.avatar)
         embed.add_field(name="ID", value=member.id, inline=True)
         embed.add_field(name="Nickname", value=member.nick or "None", inline=True)
-        embed.add_field(name="Account created", value=member.created_at, inline=False)
-        embed.add_field(name="Joined Server", value=member.joined_at, inline=False)
         embed.add_field(
-            name="Roles",
-            value=", ".join([role.mention for role in member.roles][1:]),
+            name="Account created",
+            value=f"{member.created_at.strftime('%A, %B %d, %Y (%r)')} UTC",
             inline=False,
         )
+        embed.add_field(
+            name="Joined Server",
+            value=f"{member.joined_at.strftime('%A, %B %d, %Y (%r)')} UTC",
+            inline=False,
+        )
+        roles = [role.mention for role in member.roles]
+        if len(roles) > 1:
+            embed.add_field(
+                name="Roles",
+                value=", ".join(roles[1:]),
+                inline=False,
+            )
 
         await ctx.send(embed=embed)
 
