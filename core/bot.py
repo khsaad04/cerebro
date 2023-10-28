@@ -2,7 +2,7 @@ import os
 from logging import getLogger
 from typing import Union
 
-from discord import Intents, Interaction, Message
+from discord import AllowedMentions, Intents, Interaction, Message
 from discord.ext import commands
 
 from utils import Context, MyHelp
@@ -14,12 +14,14 @@ log = getLogger("Bot")
 
 class Bot(commands.Bot):
     def __init__(self) -> None:
-        help_command = MyHelp()
         super().__init__(
             command_prefix=commands.when_mentioned_or("."),
             intents=Intents.all(),
             case_insensitive=True,
-            help_command=help_command,
+            help_command=MyHelp(),
+            allowed_mentions=AllowedMentions(
+                everyone=False, users=True, replied_user=True, roles=False
+            ),
         )
 
     async def on_connect(self) -> None:
