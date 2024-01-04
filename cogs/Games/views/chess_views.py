@@ -28,18 +28,9 @@ class ChessView(View):
                 "It's not your turn", ephemeral=True
             )
 
-        legal_moves = [str(move) for move in list(self.board.legal_moves)]
-
         modal = ChessModal(title="Make your move")
         modal.add_item(TextInput(label="Your move", placeholder="example: e2e4"))
-        modal.add_item(
-            TextInput(
-                label="Available moves",
-                style=TextStyle.long,
-                default=", ".join(legal_moves),
-                required=False,
-            ),
-        )
+
         await interaction.response.send_modal(modal)
         await modal.wait()
 
@@ -92,6 +83,14 @@ class ChessView(View):
         await interaction.message.edit(
             content=f"{winner.mention} won by resignation", view=None
         )
+
+    @button(label="Legal moves", style=ButtonStyle.success)
+    async def legal_moves_button(
+        self, interaction: Interaction, button: Button
+    ) -> None:
+        legal_moves = [str(move) for move in list(self.board.legal_moves)]
+        embed = Embed(title="Legal moves", description=", ".join(legal_moves))
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 class ChessModal(Modal):
