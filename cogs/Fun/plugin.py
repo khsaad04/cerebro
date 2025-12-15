@@ -23,7 +23,7 @@ class Fun(Plugin):
     )
     @app_commands.describe(question="The question you want to ask")
     async def _8ball_command(self, ctx: Context, *, question: str) -> None:
-        replies = set(
+        replies = [
             "It is certain.",
             "It is decidedly so.",
             "Without a doubt.",
@@ -44,7 +44,7 @@ class Fun(Plugin):
             "My sources say no.",
             "Outlook not so good.",
             "Very doubtful.",
-        )
+        ]
 
         ans = f"{ctx.author.mention} asked: {question} \nAns: {random.choice(replies)}"
 
